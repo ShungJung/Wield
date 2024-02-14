@@ -1,5 +1,5 @@
 # Wield
-Wield Productivity
+Wield productivity.
 
 ## Features
 

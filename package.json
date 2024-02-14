@@ -1,6 +1,6 @@
 {
   "name": "wield",
-  "description": "App with Routing built-in ready to create your app",
+  "description": "Wield productivity.",
   "engines": {
     "node": ">=15.0.0"
   },
@@ -37,7 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "autoprefixer": "^10.4.14",
-    "cypress": "~12.17.2",
+    "cypress": "^13.6.4",
     "cypress-ct-qwik": "~0.3.0",
     "eslint": "^8.56.0",
     "eslint-plugin-qwik": "^1.4.4",

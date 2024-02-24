@@ -8,9 +8,10 @@ interface Todo {
 
 interface TodoItemsProps {
     parentTodos: Todo[];
+    saveTodos: () => void;
 }
 
-export const TodoItems = component$(({ parentTodos }: TodoItemsProps) => {
+export const TodoItems = component$(({ parentTodos, saveTodos }: TodoItemsProps) => {
     const editingTodoId = useSignal<number | null>(null);
     const inputEditTodo = useSignal<string>("");
 
@@ -22,6 +23,7 @@ export const TodoItems = component$(({ parentTodos }: TodoItemsProps) => {
         }
 
         todo.subTodos.push(newSubTodo)
+        saveTodos();
     })
 
     const updateTodo = $(() => {
@@ -33,10 +35,12 @@ export const TodoItems = component$(({ parentTodos }: TodoItemsProps) => {
         }
 
         editingTodoId.value = null;
+        saveTodos();
     })
 
     const deleteTodo = $((id: number) => {
         parentTodos.splice(parentTodos.findIndex(todo => todo.id == id), 1);
+        saveTodos();
     });
 
     return (
@@ -66,6 +70,7 @@ export const TodoItems = component$(({ parentTodos }: TodoItemsProps) => {
                     <div>
                         <TodoItems
                             parentTodos={todo.subTodos}
+                            saveTodos={saveTodos}
                         />
                     </div>
                 </li>

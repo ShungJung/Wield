@@ -49,5 +49,8 @@
     "undici": "*",
     "vite": "^5.0.12",
     "vite-tsconfig-paths": "^4.2.1"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.5.3"
   }
 }

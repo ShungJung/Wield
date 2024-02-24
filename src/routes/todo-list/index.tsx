@@ -1,4 +1,5 @@
-import { component$, useSignal, $, useStore } from "@builder.io/qwik";
+import { component$, useSignal, $, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import { BaseDirectory, createDir, exists, readTextFile, writeTextFile } from "@tauri-apps/api/fs";
 import { TodoItems } from "~/components/todo-items/todo-items";
 
 interface Todo {
@@ -14,6 +15,39 @@ interface TodosStore {
 export default component$(() => {
     const todosStore = useStore<TodosStore>({ todos: [] });
     const inputTodo = useSignal<string>("");
+    
+    const loadTodos = $(async () => {
+        try {
+            const pathExist = await exists("Wield/todo-list.json", { dir: BaseDirectory.Data })
+            if (pathExist) {
+                const todoFile = await readTextFile("Wield/todo-list.json", {dir: BaseDirectory.Data})
+                todosStore.todos = JSON.parse(todoFile);
+            } else {
+                await createDir('Wield', { dir: BaseDirectory.Data, recursive: true });
+                await writeTextFile("Wield/todo-list.json", "", { dir: BaseDirectory.Data })
+                todosStore.todos = [];
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    })
+    
+    const saveTodos = $(async () => {
+        try {
+            const pathExist = await exists("Wield/todo-list.json", { dir: BaseDirectory.Data })
+            if (pathExist) {
+                await writeTextFile("Wield/todo-list.json", JSON.stringify(todosStore.todos), {dir: BaseDirectory.Data})
+            } else {
+                console.log("File doesn't exist")
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    })
+
+    useVisibleTask$(() => {
+        loadTodos();
+    })
 
     const createTodo = $(() => {
         const newTodo: Todo = {
@@ -24,6 +58,7 @@ export default component$(() => {
 
         todosStore.todos.push(newTodo)
         inputTodo.value = ""
+        saveTodos();
     })
 
     return (
@@ -35,7 +70,7 @@ export default component$(() => {
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add</button>
             </form>
 
-            <TodoItems parentTodos={todosStore.todos} />
+            <TodoItems parentTodos={todosStore.todos} saveTodos={saveTodos} />
         </>
     )
 })

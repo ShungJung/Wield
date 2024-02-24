@@ -12,7 +12,21 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "fs": {
+        "all": false,
+        "createDir": true,
+        "exists": true,
+        "readFile": true,
+        "removeDir": true,
+        "removeFile": true,
+        "scope": [
+          "$DATA/Wield",
+          "$DATA/Wield/*",
+          "$DATA/Wield/**"
+        ],
+        "writeFile": true
+      }
     },
     "bundle": {
       "active": true,

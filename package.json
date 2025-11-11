@@ -8,11 +8,11 @@
   ],
   "type": "module",
   "scripts": {
-    "dev:f": "npm --workspace frontend run dev",
-    "dev:b": "npm --workspace backend run dev",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "npm run test --workspaces"
+    "dev": "npm run dev --workspace",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "test": "npm run --prefix frontend test:dep && npm run --prefix backend test",
+    "build": "npm run --prefix backend build && npm run --prefix frontend build"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -29,6 +29,7 @@
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "typescript-eslint": "^8.39.1"
+    "typescript-eslint": "^8.39.1",
+    "vitest": "^3.2.4"
   }
 }

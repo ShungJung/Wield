@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-
-interface Todo {
-  id: number;
-  name: string;
-  notes?: string;
-}
+import type { Todo } from './types/todo';
+import TodoItem from './components/Todo';
 
 const dummy_todo: Todo[] = [
   {
@@ -36,7 +32,13 @@ function App() {
     setTodos((prevTodos) => [...prevTodos, newTodo]);
   };
 
-  const handleDeleteTodo = (id: number) => {
+  const editTodo = (editedTodo: Todo): void => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => (todo.id === editedTodo.id ? editedTodo : todo))
+    );
+  };
+
+  const handleDeleteTodo = (id: number): void => {
     const deletedTodos = todos.filter((todo) => todo.id != id);
     setTodos(deletedTodos);
   };
@@ -46,13 +48,11 @@ function App() {
       <input type="text" name="todo" ref={newTodoRef} />
       <button onClick={handleNewTodo}>+</button>
 
-      {todos.map((todo) => (
-        <div key={todo.id}>
-          <h3>{todo.name}</h3>
-          {todo.notes && <p>{todo.notes}</p>}
-          <button onClick={() => handleDeleteTodo(todo.id)}>Del</button>
-        </div>
-      ))}
+      <ul>
+        {todos.map((todo) => (
+          <TodoItem todo={todo} editTodo={editTodo} handleDeleteTodo={handleDeleteTodo} />
+        ))}
+      </ul>
     </>
   );
 }

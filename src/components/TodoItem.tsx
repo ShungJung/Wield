@@ -99,6 +99,7 @@ function TodoItem({ todo, onUpdate, onRemove }: TodoProps) {
   };
 
   const editToggle = () => {
+    setEditedTodo(todo);
     setEdit((oldEdit) => !oldEdit);
   };
 

@@ -1,60 +1,76 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Todo } from './types/todo';
-import TodoItem from './components/Todo';
+import RootTodoList from './components/RootTodo';
 
-const dummy_todo: Todo[] = [
-  {
-    id: 1,
-    name: 'Test',
-  },
-  {
-    id: 2,
-    name: 'Test2',
-    notes: 'yes this is test',
-  },
-];
+const root_todo: Todo = {
+  id: crypto.randomUUID(),
+  name: 'root',
+  notes: 'master todo that spawns all todos',
+  subtodos: [
+    {
+      id: crypto.randomUUID(),
+      name: 'Test',
+    },
+    {
+      id: crypto.randomUUID(),
+      name: 'Test2',
+      notes: 'yes this is test',
+    },
+  ],
+};
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>(dummy_todo);
-  const newTodoRef = useRef<HTMLInputElement>(null);
+  const [rootTodo, setRootTodo] = useState<Todo>(root_todo);
+  // const [newTodo, setNewTodo] = useState<Todo>({
+  //   id: 0,
+  //   name: '',
+  //   notes: '',
+  // });
 
   useEffect(() => {
     const fetchTodos = async () => {
-      setTodos(dummy_todo);
+      setRootTodo(root_todo);
     };
 
     fetchTodos();
   }, []);
 
-  const handleNewTodo = () => {
-    const newTodoName = newTodoRef.current?.value;
-    const newTodo = { id: Math.floor(Math.random() * 100), name: newTodoName! };
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
-  };
+  // const handleNewTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setNewTodo({
+  //     ...newTodo,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
 
-  const editTodo = (editedTodo: Todo): void => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) => (todo.id === editedTodo.id ? editedTodo : todo))
-    );
-  };
+  // const handleSubmitNewTodo = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setNewTodo({
+  //     ...newTodo,
+  //     id: Math.floor(Math.random() * 100),
+  //   });
+  //   setTodos((prevTodos) => [...prevTodos, newTodo]);
+  // };
 
-  const handleDeleteTodo = (id: number): void => {
-    const deletedTodos = todos.filter((todo) => todo.id != id);
-    setTodos(deletedTodos);
-  };
+  // const editTodo = (editedTodo: Todo): void => {
+  //   setTodos((prevTodos) =>
+  //     prevTodos.map((todo) => (todo.id === editedTodo.id ? editedTodo : todo))
+  //   );
+  // };
 
-  return (
-    <>
-      <input type="text" name="todo" ref={newTodoRef} />
-      <button onClick={handleNewTodo}>+</button>
+  // const createNewSubTodo = (todo: Todo, newSubTodo: Todo) => {
+  //   setTodos((prevTodos) =>
+  //     prevTodos.map((t) =>
+  //       t.id === todo.id ? { ...todo, subtodo: [...(todo.subtodo ?? []), newSubTodo] } : t
+  //     )
+  //   );
+  // };
 
-      <ul>
-        {todos.map((todo) => (
-          <TodoItem todo={todo} editTodo={editTodo} handleDeleteTodo={handleDeleteTodo} />
-        ))}
-      </ul>
-    </>
-  );
+  // const handleDeleteTodo = (id: number): void => {
+  //   const deletedTodos = todos.filter((todo) => todo.id != id);
+  //   setTodos(deletedTodos);
+  // };
+
+  return <RootTodoList todo={rootTodo} />;
 }
 
 export default App;

@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import type { Todo } from '../types/todo';
 import TodoItem from './TodoItem';
+import { useTodos } from '../hooks/useTodos';
 
-interface RootTodoProps {
-  todo: Todo;
-}
-
-function RootTodoList({ todo }: RootTodoProps) {
-  const [todos, setTodos] = useState<Todo[]>(todo.subtodos || []);
+function RootTodoList() {
+  const { rootTodo, createTodo, updateChild, deleteChild } = useTodos();
   const [newTodo, setNewTodo] = useState<Todo>({
     id: '',
     name: '',
@@ -27,21 +24,13 @@ function RootTodoList({ todo }: RootTodoProps) {
       ...newTodo,
       id: crypto.randomUUID(),
     });
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
-  };
-
-  const updateChild = (updatedSubTodo: Todo) => {
-    setTodos((prev) => prev.map((todo) => (todo.id === updatedSubTodo.id ? updatedSubTodo : todo)));
-  };
-
-  const removeChild = (id: string) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    createTodo(newTodo);
   };
 
   return (
-    <>
-      <h1>{todo.name}</h1>
-      <p>{todo.notes}</p>
+    <div>
+      <h1>{rootTodo.name}</h1>
+      <p>{rootTodo.notes}</p>
 
       <form onSubmit={submitNewTodo} className="flex flex-row">
         <h1>Name:</h1>
@@ -50,14 +39,14 @@ function RootTodoList({ todo }: RootTodoProps) {
         <h1>Notes:</h1>
         <input type="text" name="notes" onChange={newTodoChange} />
 
-        <button type="submit">Add</button>
+        <button type="submit">Create</button>
       </form>
       <ul>
-        {todos?.map((todo) => (
-          <TodoItem todo={todo} onUpdate={updateChild} onRemove={removeChild} />
+        {rootTodo.subtodos?.map((todo) => (
+          <TodoItem todo={todo} onUpdate={updateChild} onRemove={deleteChild} />
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 
